@@ -1,4 +1,4 @@
-import pool from '../../lib/db'; //import the database connection
+import pool from '../lib/db'; //import the database connection
 
 export async function POST(req, res) {
 try {
