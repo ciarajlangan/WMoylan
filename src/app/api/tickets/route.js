@@ -25,12 +25,7 @@ export async function GET() {
         );
 
 
-        return Response.json(
-            tickets,
-            {
-                status:200
-            }
-        );
+        return Response.json(tickets);
 
 
     } catch(error){
