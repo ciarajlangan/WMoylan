@@ -7,8 +7,6 @@ export default function Home() {
       name: "",
       email: "",
       password: "",
-      role: "",
-      created_at: ""
     });
 
     const [message, setMessage] = useState("");
@@ -59,10 +57,7 @@ export default function Home() {
         setFormData({
           name: "",
           email: "",
-          //ID????
           password: "",
-          role: "",
-          created_at: ""
         });
         setErrors({});
 
@@ -114,6 +109,23 @@ export default function Home() {
                 <p className = "field-error">{errors.email}</p> //need to create error message for this also
               )}
             </label>
+
+            <label>
+              Password 
+              <input
+              type = "password"
+              name = "password"
+              className = "input"
+              value = {formData.password}
+              onChange={handleChange}
+              required
+              />
+
+              {errors.password && (
+                <p className = "field-error">{errors.password}</p> //need to create error message for this also
+              )}
+            </label>
+            <button type = "submit">Log In</button>
           </form>
 
         </main>
