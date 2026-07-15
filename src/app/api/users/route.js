@@ -1,13 +1,83 @@
 import pool from "@/lib/db";
 //potenitally import bycrpt later?
 import bcrypt from "bcrypt";
+//create an authenticate file in lib for importing 
 
+//Validation Regex
+const nameRegex = /^[a-zA-Z-]{2,50}$/; //check the number 2 IN THIS 
+const emailRegex = /^\S+@\S+\.\S+$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+
+// Check if email already exists
+async function emailExists(email) {
+
+  const [rows] = await pool.execute(
+    "SELECT id FROM users WHERE email = ?",
+    [email]
+  );
+
+  return rows.length > 0;
+}
+
+// Validate user input
+function validateUser(data) {
+
+  const errors = {};
+
+  if (!data.name || !nameRegex.test(data.name)) {
+    errors.name = "Name must be 2-50 characters only";
+  }
+
+
+  if (!data.email || !emailRegex.test(data.email)) {
+    errors.email = "Please enter a valid email.";
+  }
+
+
+  if (!data.password || !passwordRegex.test(data.password)) {
+    errors.password =
+      "Password must contain uppercase, lowercase, number and special character";
+  }
+
+
+  return errors;
+}
+
+//POST CREATE NEW USER
 export async function POST(req) {
+
   try {
+
     const { name, email, password } = await req.json();
 
+    const errors = validateUser({
+        name,
+        email,
+        password
+    });
+    
+
+    if(Object.keys(errors).length > 0){
+        return Response.json(
+            { errors},
+            { status: 400}
+        );
+    }
+
+    //Check duplicate email
+    if(await emailExists(email)) {
+
+        return Response.json(
+            {message: "Email already exists"},
+            {status: 400}
+        );
+    }
+
+    //Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    //Insert user
     const [result] = await pool.query(
       "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
       [name, email, hashedPassword]
@@ -17,11 +87,14 @@ export async function POST(req) {
       {
         id: result.insertId,
         name,
-        email,
+        email
       },
       { status: 201 }
     );
+
+
   } catch (error) {
+
     console.error(error);
 
     return Response.json(
@@ -31,11 +104,17 @@ export async function POST(req) {
   }
 }
 
+//Get all users
 export async function GET() {
+
   try {
-    const [users] = await pool.query("SELECT * FROM users");
+
+    const [users] = await pool.execute("SELECT id, name, email FROM users");
+
     return Response.json(users);
+
   } catch (error) {
+
     console.error(error);
 
     return Response.json(

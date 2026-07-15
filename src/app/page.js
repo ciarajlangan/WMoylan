@@ -36,6 +36,9 @@ export default function Home() {
         });
 
         const data = await res.json();
+        
+        console.log("RESPONSE STATUS:", res.status);
+        console.log("RESPONSE DATA:", data);
 
         //If the request failed (validation, regex or duplication email)
         if (!res.ok) {
@@ -62,7 +65,7 @@ export default function Home() {
         setErrors({});
 
       } catch (err) {
-        setMessage("Something went wrong.")
+        console.error("FETCH ERROR:", err);
       }
 
     }
@@ -126,6 +129,13 @@ export default function Home() {
               )}
             </label>
             <button type = "submit">Log In</button>
+
+            
+            {message && (
+              <p className="field-error">
+             {message}
+            </p>
+            )}
           </form>
 
         </main>
