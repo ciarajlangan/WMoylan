@@ -76,7 +76,7 @@ export default function Home() {
         <main className = "signin-container">
           <section className = "signin-header"> 
             <h1 className = "signin-title">Log In</h1> 
-            <p className = "signin-subtitle">Create an enquiry</p>
+            <p className = "signin-subtitle">Log in</p>
           </section>
 
           <form className = "signin-form" onSubmit = {handleSubmit}>
