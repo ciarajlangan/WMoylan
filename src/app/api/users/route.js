@@ -54,7 +54,7 @@ export async function POST(req) {
     const errors = validateUser({
         name,
         email,
-        password
+        password,
     });
     
 

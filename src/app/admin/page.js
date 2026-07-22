@@ -1,11 +1,11 @@
 //for it department
 import Link from "next/link";
 //import DynamicNavBar from "../components/DynamicNavBar";
-//do an import here for an uncreated admin css file
+import "./admin.css";
 
 //need to create admin files for this page to work pages to be created = admin_users and ADMIN TICKETS
 
-export default function AdminUsersPage() {
+export default function AdminPage() {
     return (
         <> 
         
