@@ -2,7 +2,7 @@ import Link from "next/link";
 import "../admin/admin.css";
 //NEED TO CREATE PAGES 
 // Create user [done]
-// VIEW ALL USERS, 
+// VIEW ALL USERS, [done]
 // UPDATE ALL USERS AND 
 // DELETE USER
 
@@ -34,6 +34,13 @@ export default function AdminUsersPage() {
                 <p>Display registered users from the database</p>
                 </Link>
 
+            </section>
+
+            <section className = "admin-grid">
+                <Link href = "/admin_update_user" className = "admin-card">
+                <h2>Update User</h2>
+                <p>Edit user account details and roles</p>
+                </Link>
             </section>
 
 

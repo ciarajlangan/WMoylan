@@ -104,12 +104,35 @@ export async function POST(req) {
   }
 }
 
-//Get all users
-export async function GET() {
-
+// GET users or a single user by id
+export async function GET(req) {
   try {
 
-    const [users] = await pool.execute("SELECT id, name, email, role FROM users");
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    // Return one user
+    if (id) {
+
+      const [rows] = await pool.execute(
+        "SELECT id, name, email, role FROM users WHERE id = ?",
+        [id]
+      );
+
+      if (rows.length === 0) {
+        return Response.json(
+          { message: "User not found" },
+          { status: 404 }
+        );
+      }
+
+      return Response.json(rows[0]);
+    }
+
+    // Return all users
+    const [users] = await pool.execute(
+      "SELECT id, name, email, role FROM users"
+    );
 
     return Response.json(users);
 
