@@ -109,7 +109,7 @@ export async function GET() {
 
   try {
 
-    const [users] = await pool.execute("SELECT id, name, email FROM users");
+    const [users] = await pool.execute("SELECT id, name, email, role FROM users");
 
     return Response.json(users);
 
