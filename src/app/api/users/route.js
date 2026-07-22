@@ -1,4 +1,4 @@
-import pool from "@/lib/db";
+import pool from "@/app/api/libs/db";
 //potenitally import bycrpt later?
 import bcrypt from "bcrypt";
 //create an authenticate file in lib for importing 

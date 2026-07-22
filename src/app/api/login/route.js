@@ -1,4 +1,4 @@
-import pool from "@/lib/db";
+import pool from "@/app/api/libs/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 

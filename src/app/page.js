@@ -75,8 +75,8 @@ export default function Home() {
         <>
         <main className = "signin-container">
           <section className = "signin-header"> 
-            <h1 className = "signin-title">Log In</h1> 
-            <p className = "signin-subtitle">Log in</p>
+            <h1 className = "signin-title">Issue a ticket to IT</h1> 
+            <p className = "signin-subtitle">Create an account to start</p>
           </section>
 
           <form className = "signin-form" onSubmit = {handleSubmit}>
@@ -128,7 +128,7 @@ export default function Home() {
                 <p className = "field-error">{errors.password}</p> //need to create error message for this also
               )}
             </label>
-            <button type = "submit">Log In</button>
+            <button type = "submit">Create Account</button>
 
             
             {message && (
