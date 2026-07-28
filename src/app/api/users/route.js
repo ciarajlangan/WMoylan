@@ -1,23 +1,34 @@
-import pool from "@/app/api/libs/db";
+import pool from "@/libs/db";
 //potenitally import bycrpt later?
 import bcrypt from "bcrypt";
 //create an authenticate file in lib for importing 
+//FINISH THIS API ROUTE NB****************************
 
 //Validation Regex
+const idRegex = /^\d+$/;
 const nameRegex = /^[a-zA-Z-]{2,50}$/; //check the number 2 IN THIS 
 const emailRegex = /^\S+@\S+\.\S+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
+const validRoles = ["user", "admin"];
+
+// create /api/users/[id]
+
 
 // Check if email already exists
-async function emailExists(email) {
+async function emailExists(email, excludeId = null) {
 
-  const [rows] = await pool.execute(
-    "SELECT id FROM users WHERE email = ?",
-    [email]
-  );
+    let query = "SELECT id FROM users WHERE email = ?";
+    let values = [email];
 
-  return rows.length > 0;
+    if (excludeId) {
+        query += " AND id != ?";
+        values.push(excludeId);
+    }
+
+    const [rows] = await pool.execute(query, values);
+
+    return rows.length > 0;
 }
 
 // Validate user input
@@ -146,3 +157,165 @@ export async function GET(req) {
     );
   }
 }
+
+  //PUT (UPDATING) user details
+  export async function PUT(req) {
+    try {
+
+        const { name, email, password, role } = await req.json();
+
+        //users ID is required to know which user to update
+        if ( !id || !idRegex.test(id)) {
+            return Response.json(
+                { success: false, message: "Valid user ID is required"},
+                { status: 400}
+            );
+        }
+
+        const connection = await pool.getConnection();
+        await connection.beginTransaction();
+
+        try{
+            //checks if user exists in the database
+            const [userRows] = await connection.execute(
+                "SELECT id, email FROM users WHERE id = ?", [id]
+            );
+
+            if (userRows.length == 0) {
+                await connection.rollback();
+                connection.release();
+                return Response.json(
+                    { success: false, message: "User not found"},
+                    { status: 404 }
+                );
+            }
+
+            //check if email already exists for another user 
+            if (email && email !== userRows[0].email) {
+                const emailTaken = await emailExists(email, id);
+                if (emailTaken) {
+                    await connection.rollback();
+                    connection.release();
+                    return Response.json(
+                        { success: false, message: "Email already in use by another account" },
+                        { status: 409}
+                    );
+                }
+            }
+
+            const updates = [];
+            const values = [];
+
+            //Update name if provided
+            if(name !== undefined) {
+                if (!nameRegex.test(name)){
+                    await connection.rollback()
+                    connection.release();
+                    return Response.json(
+                        { success: false, message: "Invalid name format"},
+                        { status: 400 }
+                    );
+                }
+
+                updates.push("name = ?");
+                values.push(name);
+            }
+
+                  // Update email if provided
+            if (email !== undefined) {
+                if (!emailRegex.test(email)) {
+                    await connection.rollback();
+                    connection.release();
+                    return Response.json(
+                        { success: false, message: "Invalid email format" },
+                        { status: 400 }
+                    );
+                 }
+
+                updates.push("email = ?");
+                values.push(email);
+            }
+
+            //Update role if provided
+            if (role !== undefined) {
+                if (!validRoles.includes(role)) {
+                    await connection.rollback();
+                    connection.release();
+                    return Response.json(
+                    { success: false, message: "Invalid role" },
+                    { status: 400 }
+                );
+            }
+            updates.push("role = ?");
+            values.push(role);
+            }
+
+            // Hash and update password if provided
+            if (password !== undefined) {
+                if (!passwordRegex.test(password)) {
+                    await connection.rollback();
+                    connection.release();
+                    return Response.json(
+                    { success: false, message: "Password must be at least 8 characters with uppercase, lowercase, number and special character" },
+                    { status: 400 }
+                );
+            }
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updates.push("password = ?");
+            values.push(hashedPassword);
+        }
+
+        // If nothing was provided to update
+        if (updates.length === 0) {
+         await connection.rollback();
+            connection.release();
+
+             return Response.json(
+            {
+                success: false,
+                message: "No fields to update"
+            },
+            { status: 400 }
+         );
+        }
+
+        // Add userId for WHERE clause
+        values.push(id);
+
+        await connection.execute(
+         `UPDATE users SET ${updates.join(", ")} WHERE id = ?`,
+             values
+        );
+
+      await connection.commit();
+      connection.release();
+
+      return Response.json({
+        success: true,
+        message: "User updated successfully",
+      });
+
+    } catch (err) {
+      await connection.rollback();
+      connection.release();
+      throw err;
+    }
+
+  } catch (err) {
+    console.error("PUT /api/users error:", err);
+    if (err.code === 'ER_DUP_ENTRY') {
+      return Response.json(
+        { success: false, message: "Email already exists" },
+        { status: 409 }
+      );
+    }
+    return Response.json(
+      { success: false, message: "Update failed" },
+      { status: 500 }
+    );
+  }
+            //finish this 
+        }
+        
+
+    

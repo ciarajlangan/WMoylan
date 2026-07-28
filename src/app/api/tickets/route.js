@@ -1,4 +1,4 @@
-import pool from "@/app/api/libs/db";
+import pool from "@/libs/db";
 
 export async function GET() {
 

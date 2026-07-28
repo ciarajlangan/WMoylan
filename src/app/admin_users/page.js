@@ -3,8 +3,8 @@ import "../admin/admin.css";
 //NEED TO CREATE PAGES 
 // Create user [done]
 // VIEW ALL USERS, [done]
-// UPDATE ALL USERS AND 
-// DELETE USER
+// UPDATE ALL USERS AND [done]
+// DELETE USER 
 
 export default function AdminUsersPage() {
     return(
@@ -41,6 +41,14 @@ export default function AdminUsersPage() {
                 <h2>Update User</h2>
                 <p>Edit user account details and roles</p>
                 </Link>
+            </section>
+
+            <section className = "admin-grid">
+                <Link href = "/admin_delete_user" className = "admin-card">
+                <h2>Delete User</h2>
+                <p>Remove user accounts from the system</p>
+                </Link>
+
             </section>
 
 
