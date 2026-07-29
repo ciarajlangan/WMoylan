@@ -7,7 +7,6 @@ export default function AdminViewUsersPage() {
     const [users, setUsers] = useState([]);
     const [message, setMessage] = useState("");
 
-    useEffect(() => {
         async function fetchUsers() {
             try {
                 const response = await fetch("/api/users");
@@ -25,8 +24,61 @@ export default function AdminViewUsersPage() {
             }
         }
 
+    useEffect(() => {
         fetchUsers();
     }, []);
+
+      async function deactivateUser(id) {
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to deactivate this user?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/users/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage(data.message); //pulls message from the backend better design avoid duplication
+
+        //refresh list of users
+        fetchUsers();
+       
+      } else {
+        setMessage(data.message);
+  }
+
+} catch (error) {
+  console.error(error);
+  setMessage("Something went wrong while deactivating user");
+}
+}
+
+async function reactivateUser(id) {
+
+    const response = await fetch(`/api/users/${id}`, {
+        method: "PATCH",
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        setMessage(data.message);
+        
+        fetchUsers();
+    } else {
+        setMessage(data.message);
+    }
+
+    console.log(data);
+}
 
     return (
         <>
@@ -52,16 +104,36 @@ export default function AdminViewUsersPage() {
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
 
                         <tbody>
-                            {users.map((users) => (
-                                <tr key = {users.id}>
-                                    <td>{users.id}</td>
-                                    <td>{users.name}</td>
-                                    <td>{users.email}</td>
-                                    <td>{users.role}</td>
+                            {users.map((user) => (
+                                <tr key = {user.id}>
+                                      <td>{user.id}</td>
+                                      <td>{user.name}</td>
+                                      <td>{user.email}</td>
+                                      <td>{user.role}</td>
+                                      <td>
+                                        {user.active ? "Active" : "Inactive"}
+                                      </td>
+                                      <td>
+                                        {user.active ? (
+                                            <button 
+                                                onClick={() => deactivateUser(user.id)}
+                                            >
+                                                Deactivate
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => reactivateUser(user.id)}
+                                            >
+                                                Reactivate
+                                            </button>
+                                        )}
+                                        </td>
                                 </tr>
 
                             ))}

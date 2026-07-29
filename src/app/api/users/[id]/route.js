@@ -267,28 +267,49 @@ export async function DELETE(req, { params }) {
                 { status: 400 }
             );
         }
-                const [rows] = await pool.execute(
-            "SELECT id FROM users WHERE id = ?",
+            const [rows] = await pool.execute(
+            "SELECT id, active FROM users WHERE id = ?",
             [id]
         );
 
         if (rows.length === 0) {
             return Response.json(
-                { message: "User not found" },
-                { status: 404 }
+                { 
+                    message: "User not found" 
+                },
+                { 
+                    status: 404 
+                }
             );
         }
 
+        if (rows[0].active === 0) {
+            return Response.json(
+                {
+                    message: "User is already inactive"
+                },
+                {
+                    status: 400
+                }
+            );
+        }
+
+        // Soft delete user by setting active to false
         await pool.execute(
-            "DELETE FROM users WHERE id = ?",
+            `
+            UPDATE users 
+            SET active = FALSE
+            WHERE id = ?
+            `,
             [id]
         );
 
-                return Response.json({
+            return Response.json({
             success: true,
-            message: "User deleted successfully"
+            message: "User deactivated successfully"
         });
-            } catch (error) {
+
+        } catch (error) {
 
         console.error(error);
 
@@ -301,5 +322,65 @@ export async function DELETE(req, { params }) {
         // -> 400 invalid ID format
         // -> 404 User doesnt exist
         // -> user deleted successfully 
+    }
+}
+
+//REACTIVATE USER patch = small change to part of the resource
+export async function PATCH(req, { params }) {
+    try {
+
+        const { id } = await params;
+
+        if (!idRegex.test(id)) {
+            return Response.json(
+                { message: "Invalid user id" },
+                { status: 400 }
+            );
+        }
+
+        const [rows] = await pool.execute(
+            "SELECT id, active FROM users WHERE id = ?",
+            [id]
+        );
+
+        if (rows.length === 0) {
+            return Response.json(
+                { message: "User not found" },
+                { status: 404 }
+            );
+        }
+
+        if (rows[0].active === 1) {
+            return Response.json(
+                { message: "User is already active" },
+                { status: 400 }
+            );
+        }
+
+
+        await pool.execute(
+            `
+            UPDATE users
+            SET active = TRUE
+            WHERE id = ?
+            `,
+            [id]
+        );
+
+
+        return Response.json({
+            success: true,
+            message: "User reactivated successfully"
+        });
+
+
+    } catch(error) {
+
+        console.error(error);
+
+        return Response.json(
+            { error: error.message },
+            { status: 500 }
+        );
     }
 }

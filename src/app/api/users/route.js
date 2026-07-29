@@ -122,11 +122,11 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    // Return one user
+    // Find one user
     if (id) {
 
       const [rows] = await pool.execute(
-        "SELECT id, name, email, role FROM users WHERE id = ?",
+        `SELECT id, name, email, role, active FROM users WHERE id = ?`,
         [id]
       );
 
@@ -140,9 +140,9 @@ export async function GET(req) {
       return Response.json(rows[0]);
     }
 
-    // Return all users
+    // Find all users 
     const [users] = await pool.execute(
-      "SELECT id, name, email, role FROM users"
+      `SELECT id, name, email, role, active FROM users ORDER BY id`
     );
 
     return Response.json(users);

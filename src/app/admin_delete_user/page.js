@@ -7,11 +7,10 @@ export default function AdminDeleteUserPage() {
   const [id, setId] = useState("");
   const [message, setMessage] = useState("");
 
-  async function deleteUser(e) {
-    e.preventDefault();
+  async function deactivateUser(id) {
 
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this user?"
+      "Are you sure you want to deactivate this user?"
     );
 
     if (!confirmDelete) {
@@ -19,23 +18,45 @@ export default function AdminDeleteUserPage() {
     }
 
     try {
-      const response = await fetch(`/api/users?id=${id}`, {
+      const response = await fetch(`/api/users/${id}`, {
         method: "DELETE",
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage("User deleted successfully!");
-        setId("");
+        setMessage(data.message); //pulls message from the backend better design avoid duplication
+
+        //refresh list of users
+        fetchUsers();
+       
       } else {
-        setMessage(data.message || "Could not delete user");
+        setMessage(data.message);
   }
 
 } catch (error) {
   console.error(error);
-  setMessage("Something went wrong while deleting user");
+  setMessage("Something went wrong while deactivating user");
 }
+}
+
+async function reactivateUser(id) {
+
+    const response = await fetch(`/api/users/${id}`, {
+        method: "PATCH",
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        setMessage(data.message);
+        
+        fetchUsers();
+    } else {
+        setMessage(data.message);
+    }
+
+    console.log(data);
 }
   
 
@@ -44,13 +65,13 @@ export default function AdminDeleteUserPage() {
 
       <main className="login-container">
         <section className="login-header">
-          <h1 className="login-title">Delete User</h1>
+          <h1 className="login-title">Deactivate User</h1>
           <p className="login-subtitle">
-            Remove a user account from the database
+            Deactivate a user account from the database
           </p>
         </section>
 
-        <form className="login-form" onSubmit={deleteUser}>
+        <form className="login-form" onSubmit={deactivateUser}>
           <label>
             User ID
             <input
@@ -62,9 +83,20 @@ export default function AdminDeleteUserPage() {
             />
           </label>
 
-          <button type="submit" className="submit-button">
-            Delete User
+          <button 
+          type="submit" 
+          className="submit-button"
+          onClick={() => deactivateUser(id)}>
+            Deactivate User
           </button>
+
+          <button 
+          type = "submit" 
+          className = "submit-button"
+          onClick={() => reactivateUser(id)}>
+            Reactivate User
+        </button>
+
         </form>
 
         {message && <p className="login-message">{message}</p>}
