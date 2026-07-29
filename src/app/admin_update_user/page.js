@@ -25,9 +25,10 @@ export default function AdminUpdateUserPage() {
 
     async function findUser(e) {
         e.preventDefault();
-
+        
+        //this is now targeted at api/users/[id]
         try {
-            const response = await fetch (`api/users?id=${id}`);
+            const response = await fetch (`/api/users/${id}`);
             const data = await response.json();
             console.log(data);
 
@@ -60,7 +61,7 @@ export default function AdminUpdateUserPage() {
         }
 
         try {
-            const response = await fetch("/api/users", {
+            const response = await fetch(`/api/users/${formData.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -69,7 +70,11 @@ export default function AdminUpdateUserPage() {
             });
 
             const data = await response.json();
-            if (data.sucess) {
+
+            console.log("Status:", response.status);
+            console.log("Response:", data);
+
+            if (response.ok) {
                 setMessage("User updated successfully!");
             } else {
                 setMessage(data.message || "Could not update user");
@@ -114,6 +119,7 @@ export default function AdminUpdateUserPage() {
                     Name
                     <input
                     type = "text"
+                    name = "name"
                     className = "input"
                     value = {formData.name}
                     onChange = {handleChange}
@@ -135,7 +141,15 @@ export default function AdminUpdateUserPage() {
 
                 <label> 
                     Role
-                    
+                    <select
+                    name="role"
+                    className="input"
+                    value={formData.role}
+                    onChange={handleChange}
+                    >
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>   
                 </label>
 
                 <label>

@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 //Validation Regex
 const idRegex = /^\d+$/;
-const nameRegex = /^[a-zA-Z-]{2,50}$/; //check the number 2 IN THIS 
+const nameRegex = /^[A-Za-z][A-Za-z\s-]{1,49}$/; 
 const emailRegex = /^\S+@\S+\.\S+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
@@ -103,7 +103,6 @@ export async function GET(req, { params }) {
         );
     }
 }
-
 
 
 //PUT
@@ -211,12 +210,32 @@ if (updates.length === 0) {
 
 values.push(id);
 
-await pool.execute(
+console.log("Updates: ", updates);
+console.log("Values: ", values);
+
+const [before] = await pool.execute(
+    "SELECT id, name, email, role FROM users WHERE id = ?",
+    [id]
+);
+
+console.log("Before update:", before[0]);
+
+
+const [result] = await pool.execute(
     `UPDATE users
      SET ${updates.join(", ")}
      WHERE id = ?`,
     values
 );
+
+console.log(result);
+
+const [after] = await pool.execute(
+    "SELECT id, name, email, role FROM users WHERE id = ?",
+    [id]
+);
+
+console.log("After update:", after[0])
 
 return Response.json(
     {

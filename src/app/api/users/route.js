@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 
 //Validation Regex
 const idRegex = /^\d+$/;
-const nameRegex = /^[a-zA-Z-]{2,50}$/; //check the number 2 IN THIS 
+const nameRegex = /^[A-Za-z][A-Za-z\s-]{1,49}$/; 
 const emailRegex = /^\S+@\S+\.\S+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
@@ -221,7 +221,7 @@ export async function GET(req) {
                 values.push(name);
             }
 
-                  // Update email if provided
+            // Update email if provided
             if (email !== undefined) {
                 if (!emailRegex.test(email)) {
                     await connection.rollback();
