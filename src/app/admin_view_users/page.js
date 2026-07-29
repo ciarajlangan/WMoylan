@@ -6,29 +6,37 @@ import "../admin/admin.css";
 export default function AdminViewUsersPage() {
     const [users, setUsers] = useState([]);
     const [message, setMessage] = useState("");
+    const [filter, setFilter] = useState("all");
 
-        async function fetchUsers() {
-            try {
-                const response = await fetch("/api/users");
-                const data = await response.json();
-                console.log(data);
+        useEffect(() => {
+        fetchUsers(filter);
+    }, [filter]);
 
-                if(response.ok) {
-                    setUsers(data);
-                } else {
-                    setMessage(data.message || "could not load users");
-                }
-            } catch (error) {
-                console.error(error);
-                setMessage("Something went wrong while loading users");
-            }
-        }
+    async function fetchUsers(status = filter) {
+  try {
+    let url = "/api/users";
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
+    if (status === "active") {
+      url += "?active=true";
+    } else if (status === "inactive") {
+      url += "?active=false";
+    }
 
-      async function deactivateUser(id) {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (response.ok) {
+      setUsers(data);
+    } else {
+      setMessage(data.message || "Could not load users");
+    }
+  } catch (error) {
+    console.error(error);
+    setMessage("Something went wrong while loading users");
+  }
+}
+
+    async function deactivateUser(id) {
 
     const confirmDelete = window.confirm(
       "Are you sure you want to deactivate this user?"
@@ -49,7 +57,7 @@ export default function AdminViewUsersPage() {
         setMessage(data.message); //pulls message from the backend better design avoid duplication
 
         //refresh list of users
-        fetchUsers();
+        fetchUsers(filter);
        
       } else {
         setMessage(data.message);
@@ -72,7 +80,7 @@ async function reactivateUser(id) {
     if (response.ok) {
         setMessage(data.message);
         
-        fetchUsers();
+        fetchUsers(filter);
     } else {
         setMessage(data.message);
     }
@@ -87,16 +95,37 @@ async function reactivateUser(id) {
             <section className = "admin-header">
                 <h1 className = "admin-title">View All Users</h1>
                 <p className = "admin-subtitle">
-                    Display all registers users.
+                    Display all registerd users.
                 </p>
             </section>
 
             {message && <p className = "login-message">{message}</p>}
 
+            <div className="filter-buttons">
+            <button
+            onClick={() => setFilter("all")}
+            >
+            All Users
+            </button>
+
+            <button
+            onClick={() => setFilter("active")}
+            >
+            Active Users
+            </button>
+
+            <button
+            onClick={() => setFilter("inactive")}
+            >
+            Inactive Users
+            </button>
+            </div>
+
             <section className = "admin-card">
                 {users.length == 0 ? (
                     <p>No users found</p>
                 ) : (
+
                     <table className = "users-table">
                         <thead>
                         <tr>

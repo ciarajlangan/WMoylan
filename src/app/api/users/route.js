@@ -126,7 +126,10 @@ export async function GET(req) {
     if (id) {
 
       const [rows] = await pool.execute(
-        `SELECT id, name, email, role, active FROM users WHERE id = ?`,
+        `SELECT 
+        id, name, email, role, active 
+        FROM users 
+        WHERE id = ?`,
         [id]
       );
 
@@ -140,10 +143,23 @@ export async function GET(req) {
       return Response.json(rows[0]);
     }
 
-    // Find all users 
-    const [users] = await pool.execute(
-      `SELECT id, name, email, role, active FROM users ORDER BY id`
-    );
+    // Find all users
+    const active = searchParams.get("active");
+
+    let query = `SELECT 
+    id, name, email, role, active
+    FROM users
+    `;
+
+    if (active === "true") {
+        query += " WHERE active = TRUE";
+        } else if (active === "false") {
+        query += " WHERE active = FALSE";
+        }
+
+        query += " ORDER BY id";
+
+        const [users] = await pool.execute(query);
 
     return Response.json(users);
 

@@ -53,6 +53,18 @@ export async function POST(request) {
       );
     }
 
+    //deactivated user login error 
+    if (!user.active) {
+      return Response.json(
+    {
+        message: "This account has been deactivated." 
+    },
+    {   status: 403 
+
+    }
+  );
+}
+
     // Create response
     const response = NextResponse.json({
       success: true,
