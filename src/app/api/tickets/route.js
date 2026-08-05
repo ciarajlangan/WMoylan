@@ -1,4 +1,5 @@
 import pool from "@/libs/db";
+import { cookies } from "next/headers";
 
 export async function GET() {
 
@@ -49,12 +50,28 @@ export async function POST(req) {
 
     try {
 
+        const cookieStore = await cookies();
+
+        const session = cookieStore.get("session");
+
+        if (!session) {
+            return Response.json(
+                {
+                    message: "Please log in."
+                },
+                {
+                    status: 401
+                }
+            );
+        }
+
         const {
             title,
             description,
             priority,
-            created_by
         } = await req.json();
+
+        const created_by = Number(session.value)
 
 
         // Basic validation
@@ -70,7 +87,6 @@ export async function POST(req) {
             );
 
         }
-
 
         const [result] = await pool.execute(
             `

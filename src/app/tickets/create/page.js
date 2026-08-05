@@ -50,13 +50,7 @@ export default function CreateTicket(){
                 "Content-Type":"application/json"
             },
 
-            body:JSON.stringify({
-
-                ...formData,
-
-                created_by: user.id
-
-            })
+            body:JSON.stringify(formData)
 
         });
 
