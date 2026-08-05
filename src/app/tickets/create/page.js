@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 
 export default function CreateTicket(){
@@ -11,8 +13,9 @@ export default function CreateTicket(){
         priority:"LOW"
     });
 
-
+    const { user } = useAuth();
     const [message,setMessage] = useState("");
+    const router = useRouter();
 
 
     function handleChange(e){
@@ -29,6 +32,15 @@ export default function CreateTicket(){
 
         e.preventDefault();
 
+        if (!user) {
+            setMessage("Please log in first.");
+
+            setTimeout(() => {
+                router.push("/login");
+            }, 2000);
+            return;
+        }
+
 
         const res = await fetch("/api/tickets",{
 
@@ -42,8 +54,7 @@ export default function CreateTicket(){
 
                 ...formData,
 
-                // temporary until authentication
-                created_by:1
+                created_by: user.id
 
             })
 
@@ -62,7 +73,12 @@ export default function CreateTicket(){
         }
 
 
-        setMessage("Ticket created!");
+        setMessage("Ticket created successfully!");
+                    
+       setTimeout(() => {
+            router.push("/user");
+        }, 1500);
+            
 
         setFormData({
             title:"",

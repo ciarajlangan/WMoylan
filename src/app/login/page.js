@@ -3,6 +3,7 @@ import { useState} from "react";
 //access the global authentication context
 import { useAuth } from "@/context/AuthContext";
 import "./login.css";
+import { useRouter } from "next/navigation";
 //import dynamic navbar here 
 
 export default function LoginPage() {
@@ -14,6 +15,7 @@ export default function LoginPage() {
     //retrieve the login function from the authentication context
     const { login } = useAuth();
     const [message, setMessage] = useState("");
+    const router = useRouter();
 
     function handleChange(e) {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -43,9 +45,9 @@ export default function LoginPage() {
 
                 //redirects users to the appropriate dashboard based on their role
                 if(data.user.role === "admin") {
-                    window.location.href = "/admin";
+                    router.push("/admin");
                 }else if (data.user.role === "user") {
-                    window.location.href = "/user";
+                    router.push("/user");
                 } else {
                     setMessage("Unknown user role")
                 }

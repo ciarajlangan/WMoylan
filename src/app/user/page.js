@@ -23,11 +23,18 @@ export default function UserDashboard() {
                 </h1>
 
                 <p className="admin-subtitle">
-                    Manage your IT support tickets.
+                    Waterman-Moylan IT Ticketing System
                 </p>
             </section>
 
             <section className="admin-card">
+
+                <h2>User Dashboard</h2>
+                <p>
+                    Select one of the options below.
+                </p>
+
+                <div className = "dashboard-buttons">
 
                 <button
                     className="submit-button"
@@ -56,6 +63,8 @@ export default function UserDashboard() {
                 >
                     Logout
                 </button>
+
+                </div>
 
             </section>
 

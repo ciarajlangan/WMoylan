@@ -13,7 +13,7 @@ export async function GET() {
                 tickets.priority,
                 tickets.status,
                 tickets.created_at,
-                users.name AS created_by_name
+                users.name AS created_by
 
             FROM tickets
 
