@@ -1,5 +1,7 @@
 "use client"
 import { useState} from "react";
+//access the global authentication context
+import { useAuth } from "@/context/AuthContext";
 import "./login.css";
 //import dynamic navbar here 
 
@@ -9,6 +11,8 @@ export default function LoginPage() {
         password: "",
     });
 
+    //retrieve the login function from the authentication context
+    const { login } = useAuth();
     const [message, setMessage] = useState("");
 
     function handleChange(e) {
@@ -29,15 +33,19 @@ export default function LoginPage() {
 
             const data = await response.json();
 
-            if (data.sucess) {
+            if (data.success) {
                 setMessage("Login successful!");
+
+                //Store the authenticated user's details in a global context
+                login(data.user);
 
                 console.log("User:", data.user); ///HAVE TO CREATE USER AUTHENTICATION
 
+                //redirects users to the appropriate dashboard based on their role
                 if(data.user.role === "admin") {
-                    window.location.href = "/admin_dashboard";
-                }else if (data.user.role === "basicUser") {
-                    window.location.href = "/basicUser_dashboard";
+                    window.location.href = "/admin";
+                }else if (data.user.role === "user") {
+                    window.location.href = "/dashboard";
                 } else {
                     setMessage("Unknown user role")
                 }

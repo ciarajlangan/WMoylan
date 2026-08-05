@@ -10,6 +10,7 @@ export default function AdminCreateUserPage() {
         name: "",
         email: "",
         password: "",
+        role: "user"
     });
 
     const [message, setMessage] = useState("");
@@ -99,6 +100,20 @@ export default function AdminCreateUserPage() {
                     onChange = {handleChange}
                     required
                     />
+                </label>
+
+                <label>
+                    Role
+                    <select
+                    name="role"
+                    className="input"
+                    value={formData.role}
+                    onChange={handleChange}
+                    required
+                    >
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>   
                 </label>
 
                 <button type = "submit" className = "submit-button">

@@ -79,7 +79,7 @@ export async function POST(request) {
     });
 
     // Create session cookie EDIT THIS TO MAKE IT ONE DAY OR CHECK
-    response.cookies.set("session", user.UserId.toString(), {
+    response.cookies.set("session", user.id.toString(), {
       httpOnly: true,
       secure: false, //change this after deployment HTTPS 
       sameSite: "strict",

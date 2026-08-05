@@ -51,6 +51,10 @@ function validateUser(data) {
       "Password must contain uppercase, lowercase, number and special character";
   }
 
+  if (data.role && !validRoles.includes(data.role)) {
+    errors.role = "Invalid role";
+  } 
+
 
   return errors;
 }
@@ -60,12 +64,13 @@ export async function POST(req) {
 
   try {
 
-    const { name, email, password } = await req.json();
+    const { name, email, password, role } = await req.json();
 
     const errors = validateUser({
         name,
         email,
         password,
+        role,
     });
     
 
@@ -90,15 +95,16 @@ export async function POST(req) {
 
     //Insert user
     const [result] = await pool.query(
-      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-      [name, email, hashedPassword]
+      "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
+      [name, email, hashedPassword, role || "user"]
     );
 
     return Response.json(
       {
         id: result.insertId,
         name,
-        email
+        email,
+        role: role || "user"
       },
       { status: 201 }
     );
