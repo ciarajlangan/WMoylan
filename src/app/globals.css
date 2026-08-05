@@ -14,3 +14,36 @@ body {
 .page-background {
   @apply min-h-screen bg-[#080121] text-white;
 }
+
+.landing-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    background:#f4f6f8;
+}
+
+.landing-card{
+    background:white;
+    padding:40px;
+    border-radius:12px;
+    width:420px;
+    text-align:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.1);
+}
+
+.landing-card h1{
+    margin-bottom:10px;
+}
+
+.landing-card h2{
+    margin-bottom:20px;
+}
+
+.landing-card p{
+    margin-bottom:30px;
+}
+
+.secondary-button{
+    margin-top:15px;
+}
