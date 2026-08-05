@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import "../admin/admin.css";
 
 export default function AdminViewUsersPage() {
     const [users, setUsers] = useState([]);
     const [message, setMessage] = useState("");
     const [filter, setFilter] = useState("all");
+    const router = useRouter();
 
         useEffect(() => {
         fetchUsers(filter);
@@ -162,6 +164,14 @@ async function reactivateUser(id) {
                                                 Reactivate
                                             </button>
                                         )}
+
+                                            <button 
+                                                onClick={() =>
+                                                    router.push(`/admin_delete_user?id=${user.id}`)
+                                                }
+                                                > 
+                                                    Delete
+                                            </button>
                                         </td>
                                 </tr>
 

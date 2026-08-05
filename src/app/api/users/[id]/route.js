@@ -80,7 +80,25 @@ export async function GET(req, { params }) {
         }
 
         const [rows] = await pool.execute(
-            "SELECT id, name, email, role FROM users WHERE id = ?",
+            `
+            SELECT 
+                u.id,
+                u.name,
+                u.email,
+                u.role,
+                u.active,
+                COUNT(t.id) AS ticketCount
+            FROM users u 
+            LEFT JOIN tickets t 
+                ON u.id = t.created_by
+            WHERE u.id = ? 
+            GROUP BY
+                u.id,
+                u.name,
+                u.email,
+                u.role,
+                u.active
+            `,
             [id]
         );
 
@@ -255,6 +273,9 @@ return Response.json(
 
 }
 
+//ADD BACK DELETION FUNCTIONALITY TO MATCH FRONTEND ADMIN DELETE USERS PAGE
+
+
 //DELETE USER
 export async function DELETE(req, { params }) {
     try {
@@ -268,7 +289,7 @@ export async function DELETE(req, { params }) {
             );
         }
             const [rows] = await pool.execute(
-            "SELECT id, active FROM users WHERE id = ?",
+            "SELECT id FROM users WHERE id = ?",
             [id]
         );
 
@@ -283,22 +304,31 @@ export async function DELETE(req, { params }) {
             );
         }
 
-        if (rows[0].active === 0) {
+        const [tickets] = await pool.execute(
+
+            `
+            SELECT COUNT(*) AS ticketCount
+            FROM tickets 
+            WHERE created_by = ?
+            `,
+            [id]
+        );
+
+        if (tickets[0].ticketCount > 0) {
             return Response.json(
                 {
-                    message: "User is already inactive"
+                    message: "This user cannot be deleted because they have created tickets. Please deactivate the account instead."
                 },
                 {
-                    status: 400
+                    status: 409
                 }
             );
         }
 
-        // Soft delete user by setting active to false
+        //DELETE
         await pool.execute(
             `
-            UPDATE users 
-            SET active = FALSE
+            DELETE FROM users 
             WHERE id = ?
             `,
             [id]
@@ -306,12 +336,24 @@ export async function DELETE(req, { params }) {
 
             return Response.json({
             success: true,
-            message: "User deactivated successfully"
+            message: "User deleted successfully"
         });
 
         } catch (error) {
 
         console.error(error);
+
+        //if user already has a ticket error
+        if (error.errno === 1451) {
+            return Response.json(
+                {
+                    message: "This user cannot be deleted because they are linked to other records in the system. Please deactivate the account instead.."
+                },
+                {
+                    status: 409
+                }
+            );
+        }
 
         return Response.json(
             { error: error.message },
@@ -356,7 +398,6 @@ export async function PATCH(req, { params }) {
                 { status: 400 }
             );
         }
-
 
         await pool.execute(
             `

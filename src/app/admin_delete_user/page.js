@@ -1,16 +1,49 @@
 "use client";
-
-import { useState } from "react";
+//NEXT STEP TO BRING BACK DELETE USER FUNCTIONALITY BUT HAVE IT HIDDENISH
+//TAILWINDCSS FOR BETTER FILTER-BUTTONS AND GENERAL CSS FORMAT
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation"; //make delete page accept a user ID from the URL
 import "../login/login.css";
 
 export default function AdminDeleteUserPage() {
+
+  const [user, setUser] = useState(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [id, setId] = useState("");
   const [message, setMessage] = useState("");
 
-  async function deactivateUser(id) {
+  useEffect(() => {
+    const userId = searchParams.get("id");
+
+    if (userId) {
+        setId(userId);
+    }
+}, [searchParams]);
+
+   useEffect(() => {
+    if (!id) return;
+
+    async function fetchUser() {
+        const response = await fetch(`/api/users/${id}`);
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log(data);
+            setUser(data);
+        } else {
+            setMessage(data.message);
+        }
+    }
+    fetchUser();
+
+   }, [id]);
+  
+
+  async function deleteUser(id) {
 
     const confirmDelete = window.confirm(
-      "Are you sure you want to deactivate this user?"
+      "Are you sure you want to delete this user?"
     );
 
     if (!confirmDelete) {
@@ -27,8 +60,12 @@ export default function AdminDeleteUserPage() {
       if (response.ok) {
         setMessage(data.message); //pulls message from the backend better design avoid duplication
 
-        //refresh list of users
-        fetchUsers();
+            setId("");
+            setUser(null);
+
+            setTimeout(() => {
+            router.push("/admin_view_users");
+             }, 1500);
        
       } else {
         setMessage(data.message);
@@ -36,27 +73,8 @@ export default function AdminDeleteUserPage() {
 
 } catch (error) {
   console.error(error);
-  setMessage("Something went wrong while deactivating user");
+  setMessage("Something went wrong while deleting user");
 }
-}
-
-async function reactivateUser(id) {
-
-    const response = await fetch(`/api/users/${id}`, {
-        method: "PATCH",
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-        setMessage(data.message);
-        
-        fetchUsers();
-    } else {
-        setMessage(data.message);
-    }
-
-    console.log(data);
 }
   
 
@@ -65,13 +83,13 @@ async function reactivateUser(id) {
 
       <main className="login-container">
         <section className="login-header">
-          <h1 className="login-title">Deactivate User</h1>
+          <h1 className="login-title">Delete User</h1>
           <p className="login-subtitle">
-            Deactivate a user account from the database
+            Permanently delete a user account from the database
           </p>
         </section>
 
-        <form className="login-form" onSubmit={deactivateUser}>
+        <form className="login-form" >
           <label>
             User ID
             <input
@@ -83,21 +101,41 @@ async function reactivateUser(id) {
             />
           </label>
 
+        {user && (
+            <div className = "user-preview">
+                <h3>User Details</h3>
+
+                <p><strong>Name:</strong> {user.name} </p>
+                <p><strong>Email:</strong> {user.email} </p>
+                <p><strong>Role:</strong> {user.role} </p>
+                <p><strong>Status:</strong> {user.active? "Active" : "Inactive"} </p>
+
+            </div>
+        )}
+
+        {user?.ticketCount > 0 && (
+            <div className = "warning-box">
+                <p>
+                    ⚠ This user has <strong>{user.ticketCount}</strong>{" "}
+                    ticket{user.ticketCount !== 1 ? "s" : ""}.
+                </p>
+
+                <p>
+                    Users with associated tickets cannot be permanently deleted. Please deactivate the account instead.
+                </p>
+            </div>
+        )}
+
           <button 
-          type="submit" 
+          type="button" 
           className="submit-button"
-          onClick={() => deactivateUser(id)}>
-            Deactivate User
+          disabled={user?.ticketCount > 0}
+          onClick={() => deleteUser(id)}>
+            Delete User
           </button>
 
-          <button 
-          type = "submit" 
-          className = "submit-button"
-          onClick={() => reactivateUser(id)}>
-            Reactivate User
-        </button>
-
         </form>
+        
 
         {message && <p className="login-message">{message}</p>}
       </main>
