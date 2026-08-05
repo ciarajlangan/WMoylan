@@ -367,7 +367,7 @@ export async function DELETE(req, { params }) {
     }
 }
 
-//REACTIVATE USER patch = small change to part of the resource
+//UPDATE USER ACTIVE STATUS
 export async function PATCH(req, { params }) {
     try {
 
@@ -377,6 +377,20 @@ export async function PATCH(req, { params }) {
             return Response.json(
                 { message: "Invalid user id" },
                 { status: 400 }
+            );
+        }
+
+        //GET REQUESTED STATUS FROM BACKEND
+        const { active } = await req.json();
+
+        if (typeof active !== "boolean") {
+            return Response.json(
+                { 
+                    message: "Active status must be true or false"
+                },
+                {
+                    status: 400
+                }
             );
         }
 
@@ -392,26 +406,31 @@ export async function PATCH(req, { params }) {
             );
         }
 
-        if (rows[0].active === 1) {
+        //PREVENT UNNECESSARY UPDATES
+        if (rows[0].active === Number(active)) {
             return Response.json(
-                { message: "User is already active" },
-                { status: 400 }
+                { 
+                    message: `User is already ${active ? "active" : "inactive"}`
+                },
+                { 
+                    status: 400 
+                }
             );
         }
 
         await pool.execute(
             `
             UPDATE users
-            SET active = TRUE
+            SET active = ?
             WHERE id = ?
             `,
-            [id]
+            [active, id]
         );
 
 
         return Response.json({
             success: true,
-            message: "User reactivated successfully"
+            message: `User ${active ? "reactivated" : "deactivated"} successfully`
         });
 
 

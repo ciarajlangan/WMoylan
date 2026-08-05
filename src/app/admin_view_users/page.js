@@ -11,12 +11,22 @@ export default function AdminViewUsersPage() {
     const router = useRouter();
 
         useEffect(() => {
-        fetchUsers(filter);
+         fetchUsers(filter);
     }, [filter]);
 
-    async function fetchUsers(status = filter) {
+function clearMessage(){
+    if (message) {
+        setMessage("");
+    }
+}
+
+async function fetchUsers(status = filter) {
   try {
     let url = "/api/users";
+
+    if(status == "all"){
+        url = "/api/users";
+    }
 
     if (status === "active") {
       url += "?active=true";
@@ -29,6 +39,7 @@ export default function AdminViewUsersPage() {
 
     if (response.ok) {
       setUsers(data);
+      return data;
     } else {
       setMessage(data.message || "Could not load users");
     }
@@ -40,26 +51,35 @@ export default function AdminViewUsersPage() {
 
     async function deactivateUser(id) {
 
-    const confirmDelete = window.confirm(
+    const confirmDeactivate = window.confirm(
       "Are you sure you want to deactivate this user?"
     );
 
-    if (!confirmDelete) {
+    if (!confirmDeactivate) {
       return;
     }
 
     try {
       const response = await fetch(`/api/users/${id}`, {
-        method: "DELETE",
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            active: false,
+        }),
       });
 
       const data = await response.json();
+
+      console.log("Deactivate response:", data);
 
       if (response.ok) {
         setMessage(data.message); //pulls message from the backend better design avoid duplication
 
         //refresh list of users
-        fetchUsers(filter);
+        const updatedUsers = await fetchUsers(filter);
+        console.log("Updated users:", updatedUsers);
        
       } else {
         setMessage(data.message);
@@ -75,6 +95,12 @@ async function reactivateUser(id) {
 
     const response = await fetch(`/api/users/${id}`, {
         method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            active: true,
+        }),
     });
 
     const data = await response.json();
@@ -82,7 +108,8 @@ async function reactivateUser(id) {
     if (response.ok) {
         setMessage(data.message);
         
-        fetchUsers(filter);
+        await fetchUsers(filter);
+
     } else {
         setMessage(data.message);
     }
@@ -93,7 +120,10 @@ async function reactivateUser(id) {
     return (
         <>
 
-        <main className = "admin-container">
+        <main 
+        className = "admin-container"
+        onClick = {clearMessage}
+        >
             <section className = "admin-header">
                 <h1 className = "admin-title">View All Users</h1>
                 <p className = "admin-subtitle">
@@ -169,8 +199,8 @@ async function reactivateUser(id) {
                                                 onClick={() =>
                                                     router.push(`/admin_delete_user?id=${user.id}`)
                                                 }
-                                                > 
-                                                    Delete
+                                            > 
+                                                Delete
                                             </button>
                                         </td>
                                 </tr>
