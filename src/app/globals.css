@@ -11,50 +11,75 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Shared button used throughout the application */
+.submit-button {
+  @apply inline-block w-full py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition text-center no-underline;
+}
+
 .page-background {
   @apply min-h-screen bg-[#080121] text-white;
 }
 
-.landing-container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    background:#f4f6f8;
+.landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f4f6f8;
 }
 
-.landing-card{
-    background:white;
-    padding:40px;
-    border-radius:12px;
-    width:420px;
-    text-align:center;
-    box-shadow:0 4px 12px rgba(0,0,0,.1);
+.landing-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  width: 420px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
 }
 
-.landing-card h1{
-    margin-bottom:10px;
+.landing-card h1 {
+  margin-bottom: 10px;
 }
 
-.landing-card h2{
-    margin-bottom:20px;
+.landing-card h2 {
+  margin-bottom: 20px;
 }
 
-.landing-card p{
-    margin-bottom:30px;
+.landing-card p {
+  margin-bottom: 30px;
 }
 
-.secondary-button{
-    margin-top:15px;
+.secondary-button {
+  margin-top: 15px;
 }
 
-.dashboard-buttons{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
-    margin-top:20px;
+.dashboard-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
 }
 
-.dashboard-buttons button{
-    width:100%;
+.dashboard-buttons .submit-button {
+  width: 100%;
+}
+
+.logout-button {
+  @apply mt-6 px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition;
+}
+
+.navbar {
+  @apply w-full flex items-center justify-between px-8 py-4 bg-gray-900 text-white shadow;
+}
+
+.navbar-brand {
+  @apply text-xl font-bold text-pink-400;
+}
+
+.navbar-links {
+  @apply flex items-center gap-6;
+}
+
+.navbar-links a {
+  @apply text-gray-300 hover:text-pink-400 transition;
 }

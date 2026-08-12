@@ -1,15 +1,16 @@
 import Link from "next/link";
 import "../admin/admin.css";
+import DynamicNavBar from "@/components/DynamicNavBar";
 //NEED TO CREATE PAGES 
 // Create user [done]
 // VIEW ALL USERS, [done]
 // UPDATE ALL USERS AND [done]
-// DELETE USER 
+// DELETE USER [done]
 
 export default function AdminUsersPage() {
     return(
         <> 
-
+        <DynamicNavBar />
         <main className = "admin-container">
             <section className = "admin-header">
                 <h1 className = "admin-title">Manage Users</h1>

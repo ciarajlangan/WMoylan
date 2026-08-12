@@ -2,6 +2,7 @@
 
 import {useState} from "react";
 import "../login/login.css";
+import DynamicNavBar from "@/components/DynamicNavBar";
 
 export default function AdminUpdateUserPage() {
     const [id, setId] = useState("");
@@ -25,7 +26,7 @@ export default function AdminUpdateUserPage() {
 
     async function findUser(e) {
         e.preventDefault();
-        
+
         //this is now targeted at api/users/[id]
         try {
             const response = await fetch (`/api/users/${id}`);
@@ -87,7 +88,7 @@ export default function AdminUpdateUserPage() {
 
     return (
         <> 
-
+        <DynamicNavBar />
         <main className = "login-container">
             <section className = "login-header">
                 <h1 className = "login-title">Update User</h1>

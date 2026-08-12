@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "../admin/admin.css";
+import DynamicNavBar from "@/components/DynamicNavBar";
 
 export default function AdminViewUsersPage() {
     const [users, setUsers] = useState([]);
@@ -119,7 +120,7 @@ async function reactivateUser(id) {
 
     return (
         <>
-
+        <DynamicNavBar />
         <main 
         className = "admin-container"
         onClick = {clearMessage}

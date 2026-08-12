@@ -1,6 +1,6 @@
 //for it department
 
-//import DynamicNavBar from "../components/DynamicNavBar";
+import DynamicNavBar from "@/components/DynamicNavBar";
 import "./admin.css";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -24,7 +24,7 @@ export default async function AdminPage() {
 
     return (
         <> 
-        
+        <DynamicNavBar />
         <main className = "admin-container">
             <section className = "admin-header">
                 <h1 className = "admin-title">Admin Dashboard</h1>

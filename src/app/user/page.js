@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getAuthenticatedUser } from "@/libs/authen";
 import LogoutButton from "@/components/LogoutButton";
 import "../admin/admin.css"; // reuse your existing styling for now
+import DynamicNavBar from "@/components/DynamicNavBar";
 
 export default async function UserDashboard() {
     
@@ -20,6 +21,9 @@ export default async function UserDashboard() {
     }
 
     return (
+        <>
+
+        <DynamicNavBar/>
         <main className="admin-container">
 
             <section className="admin-header">
@@ -69,5 +73,6 @@ export default async function UserDashboard() {
             </section>
 
         </main>
+        </>
     );
 }

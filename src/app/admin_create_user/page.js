@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import "../login/login.css";
+import DynamicNavBar from "@/components/DynamicNavBar";
 
 //FIGURE OUT HOW ROLE WORKS HERE IF IT IS NOT THE TWO ADMIN THE REST ARE REGUALR USERS?
 export default function AdminCreateUserPage() {
@@ -56,6 +57,7 @@ export default function AdminCreateUserPage() {
 
     return (
         <> 
+        <DynamicNavBar />
         
         <main className = "login-container">
             <section className = "login-header">

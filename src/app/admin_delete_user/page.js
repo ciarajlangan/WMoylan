@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation"; //make delete page accept a user ID from the URL
 import "../login/login.css";
+import DynamicNavBar from "@/components/DynamicNavBar";
 
 export default function AdminDeleteUserPage() {
 
@@ -80,7 +81,8 @@ export default function AdminDeleteUserPage() {
 
   return (
     <>
-
+    <DynamicNavBar />
+    
       <main className="login-container">
         <section className="login-header">
           <h1 className="login-title">Delete User</h1>

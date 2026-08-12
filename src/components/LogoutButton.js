@@ -37,7 +37,7 @@ export default function LogoutButton() {
     return (
 
         <button 
-        className = "submit-button"
+        className = "logout-button"
         onClick={handleLogout}
         >
             Logout 
