@@ -1,17 +1,22 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getAuthenticatedUser } from "@/libs/authen";
+import LogoutButton from "@/components/LogoutButton";
 import "../admin/admin.css"; // reuse your existing styling for now
 
-export default function UserDashboard() {
+export default async function UserDashboard() {
+    
+    //Get the currently authenticated user from the session cookie
+    const user = await getAuthenticatedUser();
 
-    const router = useRouter();
-    const { user, logout } = useAuth();
+    //If the user is not logged in, send them back to the login page
+    if (!user) {
+        redirect("/login");
+    }
 
-    function handleLogout() {
-        logout();
-        router.push("/login");
+    //Only normal users can access this dashboard
+    if (user.role !== "user") {
+        redirect("/admin");
     }
 
     return (
@@ -36,33 +41,28 @@ export default function UserDashboard() {
 
                 <div className = "dashboard-buttons">
 
-                <button
-                    className="submit-button"
-                    onClick={() => router.push("/tickets/create")}
+                <Link
+                    href="/tickets/create"        
+                    className="submit-button"        
                 >
                     Create Ticket
-                </button>
+                </Link>
 
-                <button
+                <Link
+                    href="/tickets/my"
                     className="submit-button"
-                    onClick={() => router.push("/tickets/my")}
                 >
                     My Tickets
-                </button>
+                </Link>
 
-                <button
+                <Link
+                    href="/profile"
                     className="submit-button"
-                    onClick={() => router.push("/profile")}
                 >
                     My Profile
-                </button>
+                </Link>
 
-                <button
-                    className="submit-button"
-                    onClick={handleLogout}
-                >
-                    Logout
-                </button>
+                <LogoutButton />
 
                 </div>
 

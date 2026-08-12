@@ -6,6 +6,9 @@ import "./login.css";
 import { useRouter } from "next/navigation";
 //import dynamic navbar here 
 
+
+//FOR NOW WE NEED TO SEE IS THE USER LOGGED IN? WHAT ROLE DO THEY HAVE? SHOULD THEY BE ALLOWED ON THIS PAGE?
+
 export default function LoginPage() {
     const [formData, setFormData] = useState({
         email: "",
@@ -62,7 +65,6 @@ export default function LoginPage() {
         }
     }
 
-
     return (
         <>
 
@@ -87,7 +89,7 @@ export default function LoginPage() {
                 </label>
 
                 <label>
-                    password
+                    Password
                     <input
                     type ="password"
                     name = "password"
