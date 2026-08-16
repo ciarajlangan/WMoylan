@@ -1,40 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Waterman-Moylan IT Ticketing System
 
-## Getting Started
+A web-based IT ticketing system developed using Next.js, React and MySQL.
 
-First, run the development server:
+The system allows users to create and manage IT support tickets, while administrators can manage users and tickets through a separate administrative interface.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### User Features
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+- User registration and login
+- Cookie-based authentication
+- User role-based access
+- User dashboard
+- Create IT support tickets
+- View personal tickets
+- View user profile
+- Logout functionality
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+### Administrator Features
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- Administrator login
+- Separate administrator dashboard
+- User management
+- View users
+- Create users
+- Update users
+- Deactivate users
+- Reactivate users
+- Ticket management
+- Role-based access control
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Ticket Management
 
-## Learn More
+- Create tickets
+- Assign ticket creator
+- Set ticket priority
+- Track ticket status
+- View ticket information
+- Update tickets
+- Delete tickets
+- Display the user who created each ticket
 
-To learn more about Next.js, take a look at the following resources:
+## Authentication and Security
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+The application uses cookie-based authentication to maintain user sessions.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Authentication checks are performed when accessing protected pages to ensure that users are logged in and have the appropriate role.
 
-## Deploy on Vercel
+Two user roles are currently supported:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `user`
+- `admin`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+Passwords are securely hashed using `bcrypt` rather than being stored as plain text.
+
+Database credentials are stored in environment variables and are not included in the repository.
+
+## Technologies Used
+
+- **Next.js**
+- **React**
+- **JavaScript**
+- **MySQL**
+- **mysql2**
+- **bcrypt**
+- **Tailwind CSS**
+- **Git / GitHub**
+
+## Project Structure
+
+The project uses the Next.js App Router.
+
+```text
+src/
+├── app/
+│   ├── admin/
+│   ├── admin_users/
+│   ├── admin_create_user/
+│   ├── admin_delete_user/
+│   ├── admin_update_user/
+│   ├── admin_view_users/
+│   ├── login/
+│   ├── tickets/
+│   │   ├── create/
+│   │   └── my/
+│   ├── profile/
+│   └── user/
+│
+├── components/
+│   ├── AuthProvider.js
+│   ├── LogoutButton.js
+│   └── DynamicNavBar.js
+│
+├── context/
+│   └── AuthContext.js
+│
+└── libs/
+    ├── authen.js
+    └── db.js
