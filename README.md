@@ -1,5 +1,7 @@
 # Waterman-Moylan IT Ticketing System
 
+> **Work in progress** — This project is currently under active development.
+
 A web-based IT ticketing system developed using Next.js, React and MySQL.
 
 The system allows users to create and manage IT support tickets, while administrators can manage users and tickets through a separate administrative interface.
@@ -29,6 +31,10 @@ The system allows users to create and manage IT support tickets, while administr
 - Reactivate users
 - Ticket management
 - Role-based access control
+
+## Database
+
+A MySQL schema is included in `database_schema.sql` to allow the database structure to be recreated locally.
 
 ### Ticket Management
 
@@ -98,3 +104,4 @@ src/
 └── libs/
     ├── authen.js
     └── db.js
+
