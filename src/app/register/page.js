@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import "./register.css"
 
 export default function Home() {
 
@@ -48,7 +49,7 @@ export default function Home() {
           //check if the backend returned validation errors
           if(data.errors) {
             setErrors(data.errors);
-            setMessage("Please fix all the errors above")
+            setMessage("Please fix all the errors above.")
 
           }else{
 
@@ -78,17 +79,40 @@ export default function Home() {
 
     //Style for line 80, 81 and 82 and check for appropriate text
     return (
-        <>
-        <main className = "signin-container">
-          <section className = "signin-header"> 
-            <h1 className = "signin-title">Issue a ticket to IT</h1> 
-            <p className = "signin-subtitle">Create an account to start</p>
-          </section>
+        
+        <main className = "register-page">
 
-          <form className = "signin-form" onSubmit = {handleSubmit}>
+          <section className = "register-card">
 
+          {/* Header */}
+          <header className = "register-header">
+
+            <div className = "register-logo">
+              IT
+            </div>
+
+            <h1 className = "register-title">
+              Create your account
+              </h1> 
+
+            <p className = "register-subtitle">
+              Create an account to submit and track IT support tickets
+            </p>
+
+            </header>
+
+          {/* Form */}
+          <form 
+          className = "register-form" 
+          onSubmit = {handleSubmit}
+          >
+
+            {/* Name */}
+            <div className = "register-form-group">
             <label>
-              Name
+              Full name
+              </label>
+
               <input 
               type = "text"
               name = "name"
@@ -101,10 +125,16 @@ export default function Home() {
               {errors.name && (
                 <p className = "field-error">{errors.name}</p> //need to create this error message in api
               )}
-            </label>
 
-            <label>
-              Email 
+              </div>
+            
+            
+             {/* Email */}
+            <div className="register-form-group">
+              <label>
+              Email address
+              </label>
+
               <input
               type = "email"
               name = "email"
@@ -117,10 +147,17 @@ export default function Home() {
               {errors.email && (
                 <p className = "field-error">{errors.email}</p> //need to create error message for this also
               )}
-            </label>
 
-            <label>
+            </div>
+           
+            
+            {/* Password */}
+            <div className="register-form-group">
+
+              <label>
               Password 
+              </label>
+
               <input
               type = "password"
               name = "password"
@@ -133,18 +170,44 @@ export default function Home() {
               {errors.password && (
                 <p className = "field-error">{errors.password}</p> //need to create error message for this also
               )}
-            </label>
-            <button type = "submit">Create Account</button>
 
-            
+            </div>
+           
+           {/*Create account button */}
+            <button 
+            className = "register-button"
+            type = "submit">
+              Create Account
+            </button>
+
+            {/* Message */}
             {message && (
-              <p className="field-error">
+              <p className="input-error">
              {message}
             </p>
             )}
+
           </form>
 
+          {/* Login link */}
+          <div className = "register-footer">
+
+            <span>
+              Already have an account?
+            </span>
+
+            <button 
+            type = "button"
+            className = "register-link"
+            onClick = {() => router.push("/login")}
+            >
+              Sign in
+              </button>
+
+            </div>
+
+            </section>
+
         </main>
-        </>
     );
 }

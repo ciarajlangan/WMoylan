@@ -17,7 +17,7 @@ export default function Home() {
 
                 <p>
                     Report IT issues, manage support tickets and track
-                    requests through a secure ticketing system.
+                    requests through the ticketing system.
                 </p>
 
                 <button

@@ -1,0 +1,197 @@
+@reference "../globals.css";
+
+.register-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+
+    background:         
+            radical-gradient(
+            circle at top left,
+            #dbeafe 0,
+            transparent 35%
+        )
+            #f8fafc;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 460px;
+    padding: 40px;
+
+    Background: #ffffff;
+    border: 1 px solid #e5e7eb;
+    border-radius: 16px;
+
+    box-shadow:
+    0 20px 40px rgba(15, 23, 42, 0.08);
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 20px;
+
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.register-header p {
+    margin: 0;
+
+    color: #6b7280;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.register-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+} 
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151
+}
+
+.input {
+    width: full;
+    box-sizing: border-box;
+
+    padding: 12px 14px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    background: #bdb7b7;
+    color: #6e44b1;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: 
+        border-colour 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+    color: #636c7a;
+}
+
+.input:focus {
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.input-error {
+    color: #dc2626;
+}
+
+.field-error {
+    margin: 0;
+
+    color: #dc2626;
+    font-size: 13px;
+}
+
+.primary-button {
+    width: 100%;
+    margin-top: 4px;
+
+    padding: 13px 16px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 
+        background 0.15s ease, 
+        transform 0.15s ease;
+}
+
+.primary-button:hover {
+    background: #1d4ed8;
+}
+
+.primary-button:active {
+    transform: translateY(1px);
+}
+
+.form-message {
+    margin: 0;
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    background: #eff6ff;
+    color: #1d4ed8;
+
+    font-size: 14px;
+    text-align: center;
+}
+
+.register-footer {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+
+    margin-top: 28px;
+    padding-top: 24px;
+
+    border-top: 1px solid #e5e7eb;
+
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.register-link {
+    padding: 0;
+
+    border: none;
+    background: none;
+
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
